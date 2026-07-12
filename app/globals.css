@@ -4,12 +4,12 @@
   /* Editorial palette — magenta pulled from Annika's dress, everything else quiet. */
   --accent: #B4165A;
   --accent-deep: #7C0E3D;
-  --paper: #FBFAF8;
-  --paper-warm: #F3F0EB;
+  --paper: #FDF6F2;
+  --paper-warm: #F7EAE4;
   --ink: #1C1A18;
   --ink-soft: #57514A;
   --ink-faint: #8A8177;
-  --rule: #E4DED5;
+  --rule: #E9D8D0;
 
   --background: var(--paper);
   --foreground: var(--ink);

@@ -50,7 +50,7 @@ export default function CinematicIntro({ onDone }: { onDone: () => void }) {
                     {t.introKicker}
                 </p>
 
-                <h1 className="animate-fade-up delay-500 font-display mt-5 text-5xl leading-[1.05] text-white md:text-7xl">
+                <h1 className="animate-fade-up delay-500 font-script mt-5 text-6xl leading-[1.05] text-white md:text-8xl">
                     {t.introName}
                     <span className="block text-[var(--accent)]">{t.introEvent}</span>
                 </h1>

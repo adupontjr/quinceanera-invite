@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Cormorant_Garamond, Outfit, Sacramento } from "next/font/google";
 import "./globals.css";
 import LanguageProvider from "./components/LanguageProvider";
 
@@ -7,6 +7,13 @@ const display = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["300", "400", "500"],
+});
+
+// Monoline script, closest match to the hand-lettered name on the printed invite.
+const script = Sacramento({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const body = Outfit({
@@ -31,7 +38,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${display.variable} ${body.variable} antialiased`}>
+      <body className={`${display.variable} ${body.variable} ${script.variable} antialiased`}>
         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>

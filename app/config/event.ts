@@ -27,6 +27,16 @@ export const photos = {
     ],
 } as const;
 
+/**
+ * Floral art lifted from the printed invitation.
+ * Each is optional — a missing file simply renders nothing, never a broken image.
+ */
+export const ornaments = {
+    wreath: "/images/wreath.png",
+    cornerLeft: "/images/floral-corner-left.png",
+    cornerRight: "/images/floral-corner-right.png",
+} as const;
+
 function toUtc(localIso: string): string {
     return new Date(localIso).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
