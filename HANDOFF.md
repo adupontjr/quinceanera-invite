@@ -195,13 +195,19 @@ Two *separate* failure modes. The old note here only described the first one:
    fatal: Unable to create '.git/index.lock': File exists.
    ```
 
-**There is a stale `.git/index.lock` in the repo right now.** It has to go before
-anything can be committed, and it can only be deleted from a real terminal.
-There are also some orphaned `.git/objects/*/tmp_obj_*` files (~2 MB) from the
-same unlink failure — harmless litter, `git fsck` reports the object store clean.
+**The stale lock has been cleared** and everything below is committed and pushed.
+If a `fatal: Unable to create '.git/index.lock': File exists.` appears again,
+delete the file — `rm -f .git/index.lock` works from the sandbox once Cowork has
+been granted delete permission on the folder, otherwise `del .git\index.lock`
+from a real terminal.
 
-**Practical rule:** work in a local copy (`/tmp`), copy into the mount, verify
-with `md5sum`, and **run git from a real terminal, never from the sandbox.**
+There may be orphaned `.git/objects/*/tmp_obj_*` files (~2 MB) from the same
+unlink failure — harmless litter, `git fsck` reports the object store clean.
+
+**Practical rule:** work in a local copy (`/tmp`), rsync into the mount, verify
+with `md5sum`. Git *does* work from the sandbox against the mount — the commit
+and push on 12 July were both done that way — but the stale-lock failure mode is
+real, so check for the lock first if git misbehaves.
 
 ### Other notes
 
@@ -214,28 +220,36 @@ with `md5sum`, and **run git from a real terminal, never from the sandbox.**
 - Firebase web API keys are public by design — they identify the project, they
   don't authorize anything. The Firestore rules are the actual security boundary.
 
-## Pending — nothing is committed yet
+## Shipped — everything above is live
 
-The three floral PNGs are **staged**; the four photos and the three source edits
-are **untracked/modified**. Nothing has been committed or pushed. `git fsck` is
-clean and `.git/config` is intact.
+Committed as `f4542ff` ("feat: add photos, floral art, and fix wreath photo
+inset") and pushed to `main` on 12 July. Vercel has redeployed. All six assets
+were verified serving **200** on the live site:
 
-From a real terminal (not the sandbox):
-
-```bash
-cd "C:\Users\jr\My Apps\quinceanera-invite"
-
-del .git\index.lock          # clear the stale lock first, or git refuses
-
-git add public/images app/config/event.ts app/components/CinematicIntro.tsx app/components/Hero.tsx
-git commit -m "feat: add photos and floral art, split hero/intro, tune wreath inset"
-git push                     # may prompt for a new PAT
+```
+annika-hero.jpg  annika-intro.jpg  annika-1.jpg
+wreath.png  floral-corner-left.png  floral-corner-right.png
 ```
 
-Vercel redeploys automatically on push to `main`. After it lands, check the live
-site: the intro should show the full-length shot, the wreath should frame the
-"15" close-up with no gap or overlap, and the corners should sit at the top of
-the hero.
+The site now has her photos and the floral art on it for the first time.
+
+### Not yet reviewed by a human
+
+Nobody has actually *looked* at the deployed result. Headless Chrome won't run in
+the sandbox, so this was verified by HTTP status only — the files load, but
+whether the composition works is unconfirmed. Check on the live site:
+
+- the wreath's oval framing the circular photo crop (the `inset-x-[28%]
+  inset-y-[21%]` was derived by eye, not measured — see the note further up)
+- the floral corners at the top of the hero
+- the magenta UI accent against the cream background, now that the real art is in
+
+### ⚠️ Two files are byte-identical
+
+`annika-intro.jpg` and `annika-2.jpg` have the same MD5 (`fd2e8e77…`). The
+full-length shot used for the opening reveal is also sitting in the gallery slot.
+Harmless today — `annika-2.jpg` isn't placed in the layout — but if those were
+meant to be different photos, one of them is the wrong file.
 
 ## Deploying
 
