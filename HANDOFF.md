@@ -1,6 +1,6 @@
 # Handoff — Annika's Quinceañera invite
 
-Last updated: 11 July 2026
+Last updated: 12 July 2026
 
 ## What this is
 
@@ -39,9 +39,12 @@ Don't relitigate these unless JR says so:
 4. **Bilingual EN/ES** via a toggle (top right). Defaults to Spanish if the
    guest's browser is Spanish. Choice persists in `localStorage`.
 5. **RSVP form is primary**, Ann Marie's phone number sits beneath it as backup.
-6. **Selected elements from the printed invite** are being brought in: the rose
-   wreath framing her photo, floral corner clusters, and the script typeface for
-   her name. Not a full print translation.
+6. **Floral art is watercolor botanical** — a rose wreath framing her photo and
+   two corner clusters. Originally the plan was to lift these off the printed
+   invite; they were generated instead. See open item 2 below for why.
+7. **The hero photo is split in two.** The wreath's oval interior is small, so a
+   full-length shot rendered her face too small to read. The wreath now frames a
+   close portrait; the full-length shot carries the cinematic intro instead.
 
 ## Where things live
 
@@ -52,10 +55,10 @@ app/
                        from the English object, so Spanish must match its shape.
   firebase/config.ts   Reads NEXT_PUBLIC_FIREBASE_* env vars. No secrets in repo.
   components/
-    CinematicIntro.tsx  Opening reveal
+    CinematicIntro.tsx  Opening reveal — uses photos.intro
     Hero.tsx            Script name + wreath-framed photo + date/time
     Countdown.tsx       Live countdown
-    EventDetails.tsx    Punctuality, dinner, dress code
+    EventDetails.tsx    Punctuality, dinner, dress code — uses photos.gallery[0]
     LocationMap.tsx     Map embed + directions link
     Gifts.tsx           Gift wording
     RsvpForm.tsx        Form -> Firestore, calendar links, phone fallback
@@ -67,74 +70,172 @@ app/
 firestore.rules        Guests can create an RSVP; nobody can read/edit/delete
 ```
 
-## ⚠️ Open items — pick up here
+## Code changed on 12 July 2026
 
-### 1. The photos are missing (blocking)
+Three files, all minimal:
 
-All three 404 on the live site. The `Photo` component degrades to a grey
-placeholder, so nothing is broken, but the site is an empty frame until these land.
+- **`app/config/event.ts`** — added `photos.intro`. `hero` and `intro` are now
+  two different photos (see design decision 7).
+- **`app/components/CinematicIntro.tsx`** — now reads `photos.intro` instead of
+  sharing `photos.hero` with the Hero.
+- **`app/components/Hero.tsx`** — the photo inset was retuned from
+  `inset-[18%]` to **`inset-x-[28%] inset-y-[21%]`**.
 
-Save into `public/images/`:
+### How that inset was derived (read this before swapping the wreath art)
 
-| File | What it's for |
-|---|---|
-| `annika-hero.jpg` | Wreath centre + intro. Use the red sequin portrait against the blue backdrop. |
-| `annika-1.jpg` | Beside the dress-code/dinner details. The seated one with the guitar works. |
-| `annika-2.jpg` | Spare, not yet placed in the layout. |
+The old `inset-[18%]` was a guess and it was wrong — the photo would have spilled
+about 11% past the ring and shown through the gaps between the leaves.
 
-### 2. The floral art has not been extracted (blocking the current design)
+1. Measured the wreath's **actual** transparent oval by closing the opaque mask
+   (to bridge the gaps between stems), filling holes, and taking the largest
+   enclosed region: **x 157→695, y 269→1001** of the 848×1264 PNG — a
+   **539×733 px** oval, taller than wide.
+2. Accounted for `object-contain` letterboxing. The Hero container is
+   `aspect-square`, but the wreath is 848/1264 = **67.09%** of the square's
+   width, so it fits by height and sits inside a **16.46% letterbox** on each
+   side. Mapping image pixels to container percentages:
+   `fx = 0.1646 + (x/848) × 0.6709`, `fy = y/1264`
+   → left 28.9%, right 28.6%, top 21.3%, bottom 20.8%.
+3. Pulled in ~0.5–1% so the photo tucks *under* the inner foliage (the wreath is
+   drawn on top of the photo), leaving no cream hairline and no photo edge
+   bleeding through the ring's gaps.
 
-`Ornament` currently renders nothing because `wreath.png`,
-`floral-corner-left.png` and `floral-corner-right.png` don't exist.
+**If the wreath art is ever regenerated or swapped, this value must be
+recomputed.** It is specific to that PNG's oval.
 
-**Plan:** JR saves the two printed-invite images as `public/images/invite-page1.png`
-and `invite-page2.png`. Then crop out the wreath and the two corner clusters and
-knock the cream background out to transparency (Python + Pillow).
+## Open items — pick up here
 
-**Known risks:**
-- The cream will not knock out cleanly. Soft watercolor edges and drop shadows
-  over a textured cream field mean an automated threshold leaves faint halos,
-  most visible where the wreath overlaps her photo.
-- **Better option first:** the invite looks like it was made in Canva. If whoever
-  made it can export the floral elements as PNGs *with transparency*, use those —
-  they will beat anything reconstructed from a flattened scan.
-- The wreath in the print is an **oval**, not a circle, and is clipped by the page
-  edge. The `inset-[18%]` on the photo in `Hero.tsx` will likely need adjusting
-  once the real art is composited.
+### 1. Photos — DONE
 
-### 3. Firestore rules must be re-published
+All three are in `public/images/`, optimized (max 2000px long edge, quality 82,
+progressive, EXIF stripped). ~1 MB total for four files.
 
-The rules whitelist exact field names via `hasOnly()`. A `phone` field was added
-to the form after the rules were last published. **If the rules in the Firebase
-console are stale, every RSVP will be rejected.** Copy `firestore.rules` into
-Firebase console → Firestore → Rules → Publish. Verify by submitting a test RSVP.
+| File | Photo | Used by |
+|---|---|---|
+| `annika-hero.jpg` | The "15" balloon close-up | Wreath centre (Hero) |
+| `annika-intro.jpg` | Full-length, red sequin dress, blue backdrop | Cinematic intro |
+| `annika-1.jpg` | Seated with the soccer ball, warm bokeh | Beside the details section |
+| `annika-2.jpg` | (duplicate of the intro shot) | **Nothing** |
+
+**This changed from the original plan.** The old plan pointed the wreath *and*
+the intro at one `annika-hero.jpg` (the full-length shot). Inside the wreath's
+small oval her face came out tiny, so the hero was split: the close-up goes in
+the wreath, the full-length shot went full-bleed behind the Ken Burns push.
+
+**Loose end:** `annika-2.jpg` is byte-identical to `annika-intro.jpg`, and
+`photos.gallery[1]` — the only thing that would reference it — is referenced by
+no component at all. It's 199 KB of dead weight. **Delete the file and drop the
+`gallery[1]` entry from `event.ts`** unless you have a use for a second gallery
+slot.
+
+### 2. Floral art — DONE, but not the way this doc originally planned
+
+The wreath (`wreath.png`) and both corner clusters (`floral-corner-left.png`,
+`floral-corner-right.png`) are in `public/images/` with clean alpha.
+
+They were **AI-generated (Gemini) as watercolor botanicals**, not cropped out of
+the printed invite. That sidesteps the whole risk list the old plan worried
+about — no cream knockout, no halos over her photo, no fighting the drop shadows
+in a flattened scan. The old Canva-export idea is moot.
+
+**Gotcha if you ever regenerate these.** The images came back as **flattened
+screenshots with the transparency checkerboard baked into the pixels** — RGB,
+no alpha channel at all. The alpha had to be reconstructed from scratch:
+
+- background detected as **achromatic + bright** (chroma ≤ 5–7, luma ≥ 168), not
+  a naive global brightness threshold — a global threshold eats the pale sage
+  leaves and punches holes in the cream/white roses;
+- **connectivity-based**, so bright highlights *enclosed* by petals stay opaque;
+- **enclosed checker-pockets removed** by detecting the checker grey specifically
+  (its value differs per image — auto-detect it, don't hardcode);
+- **soft anti-aliased feather** from a normalized-convolution local-background
+  estimate, so the watercolor edges fade instead of looking cut out;
+- **edge decontamination** — semi-transparent pixels take their colour from the
+  nearest solid artwork pixel, or the checker grey survives as a fringe on cream.
+
+Each was verified by compositing over `#FDF6F2` and checking for a rectangular
+ghost, surviving checker squares, and halos. All clean.
+
+**Palette note, deliberate:** the generated florals came out **wine/burgundy**,
+not the spec'd magenta `#B4165A`. This was accepted as an improvement — it sits
+richer on the cream and doesn't fight her red dress. **So the site's magenta UI
+accent and the floral art are not the same hue.** That is on purpose. Don't
+"fix" it by recolouring the flowers to match the accent.
+
+### 3. Firestore rules — DONE
+
+JR has republished the rules. The `phone` field the form added is now whitelisted
+in `hasOnly()`, so RSVPs are no longer rejected.
 
 ### 4. Decisions JR hasn't made yet
 
-- **The map pins a home address on a public URL.** If 18166 Andrea Court is a
-  residence, consider dropping the embed and leaving the address as text.
-  Two-minute change in `LocationMap.tsx`.
+- **The map pins a home address on a public URL.** Explicitly deferred — "we'll
+  talk about the map later." If 18166 Andrea Court is a residence, the embed can
+  be dropped for plain text in a two-minute change in `LocationMap.tsx`.
 - **No spam protection on the RSVP form.** Fine for a link shared privately; a
   problem if it circulates. Would need a captcha or App Check.
 - **Email is required** on the form. It's the field most likely to make an older
   relative bail. Consider making it optional, or dropping it for phone.
-- **Magenta on cream** — the accent was picked against an off-white background.
-  Now that the base is warmer, it may read hot. Check it once the art is in.
 
 ## Working notes
 
-- **`npm install` and `git` do not work reliably from the Claude sandbox inside
-  `My Apps`** — the mount truncates writes, which silently corrupted a source file
-  and a `.git/config` earlier. Work in a local copy (`/tmp`), then rsync back.
-  Always verify with `md5sum` after copying files into the mount.
+### ⚠️ The `My Apps` mount — read this before touching git
+
+Two *separate* failure modes. The old note here only described the first one:
+
+1. **It truncates writes.** It has silently corrupted a source file and a
+   `.git/config` before. In this session every write actually landed clean and
+   md5-verified on the first attempt, so it may be intermittent — but **keep
+   md5-verifying anyway.** The failure is silent, which is the whole problem.
+2. **It blocks `unlink`** (`Operation not permitted`). This is the one that
+   breaks git. Git creates `.git/index.lock` for every operation and deletes it
+   afterwards; the delete fails, the stale lock stays, and the next git write
+   dies with:
+   ```
+   fatal: Unable to create '.git/index.lock': File exists.
+   ```
+
+**There is a stale `.git/index.lock` in the repo right now.** It has to go before
+anything can be committed, and it can only be deleted from a real terminal.
+There are also some orphaned `.git/objects/*/tmp_obj_*` files (~2 MB) from the
+same unlink failure — harmless litter, `git fsck` reports the object store clean.
+
+**Practical rule:** work in a local copy (`/tmp`), copy into the mount, verify
+with `md5sum`, and **run git from a real terminal, never from the sandbox.**
+
+### Other notes
+
 - **Headless Chrome won't run in the sandbox** (no root, missing `libXdamage`), so
   screenshots aren't possible. Verify visually on the Vercel deploy instead.
 - `.env.local` exists locally and is gitignored. The same seven
   `NEXT_PUBLIC_FIREBASE_*` vars are set in Vercel.
-- The GitHub PAT used to create the repo **should have been revoked**. If pushing
-  from the sandbox again, a new one is needed.
+- The GitHub PAT used to create the repo **should have been revoked**. The push
+  below will likely prompt for a fresh credential.
 - Firebase web API keys are public by design — they identify the project, they
   don't authorize anything. The Firestore rules are the actual security boundary.
+
+## Pending — nothing is committed yet
+
+The three floral PNGs are **staged**; the four photos and the three source edits
+are **untracked/modified**. Nothing has been committed or pushed. `git fsck` is
+clean and `.git/config` is intact.
+
+From a real terminal (not the sandbox):
+
+```bash
+cd "C:\Users\jr\My Apps\quinceanera-invite"
+
+del .git\index.lock          # clear the stale lock first, or git refuses
+
+git add public/images app/config/event.ts app/components/CinematicIntro.tsx app/components/Hero.tsx
+git commit -m "feat: add photos and floral art, split hero/intro, tune wreath inset"
+git push                     # may prompt for a new PAT
+```
+
+Vercel redeploys automatically on push to `main`. After it lands, check the live
+site: the intro should show the full-length shot, the wreath should frame the
+"15" close-up with no gap or overlap, and the corners should sit at the top of
+the hero.
 
 ## Deploying
 
@@ -142,8 +243,4 @@ Firebase console → Firestore → Rules → Publish. Verify by submitting a tes
 cd "C:\Users\jr\My Apps\quinceanera-invite"
 npm install          # first time only
 npm run dev          # http://localhost:3000
-
-git add .
-git commit -m "your message"
-git push             # Vercel redeploys automatically
 ```

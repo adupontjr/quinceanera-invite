@@ -20,7 +20,10 @@ export const event = {
 
 /** Photos — drop files into public/images and list them here. Empty = placeholder shown. */
 export const photos = {
+    // Wreath centre: a close portrait, so her face still reads inside the small oval.
     hero: "/images/annika-hero.jpg",
+    // Opening reveal: the full-length shot, full-bleed behind the Ken Burns push.
+    intro: "/images/annika-intro.jpg",
     gallery: [
         "/images/annika-1.jpg",
         "/images/annika-2.jpg",

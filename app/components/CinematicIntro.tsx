@@ -36,7 +36,7 @@ export default function CinematicIntro({ onDone }: { onDone: () => void }) {
             className={`fixed inset-0 z-50 overflow-hidden bg-[var(--ink)] transition-all duration-1000 ease-in-out ${leaving ? 'pointer-events-none scale-105 opacity-0' : 'opacity-100'}`}
         >
             <Photo
-                src={photos.hero}
+                src={photos.intro}
                 alt=""
                 label=""
                 className="absolute inset-0 h-full w-full"

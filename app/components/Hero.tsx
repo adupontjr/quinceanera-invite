@@ -31,7 +31,7 @@ export default function Hero() {
 
                 {/* Wreath framing her photo — the centerpiece of the print piece */}
                 <div className="relative mx-auto mt-12 aspect-square w-full max-w-lg md:mt-16">
-                    <div className="absolute inset-[18%] overflow-hidden rounded-full">
+                    <div className="absolute inset-x-[28%] inset-y-[21%] overflow-hidden rounded-full">
                         <Photo
                             src={photos.hero}
                             alt={`${event.honoreeFirstName} on her fifteenth birthday`}
