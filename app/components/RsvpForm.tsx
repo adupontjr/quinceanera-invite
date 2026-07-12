@@ -34,6 +34,7 @@ export default function RsvpForm() {
                 addDoc(collection(db, event.rsvpCollection), {
                     name: data.get('name'),
                     email: data.get('email'),
+                    phone: data.get('phone') || '',
                     guests: parseInt(data.get('guests') as string, 10),
                     attending: data.get('attending') === 'yes',
                     message: data.get('message') || '',
@@ -116,6 +117,13 @@ export default function RsvpForm() {
                                 <label htmlFor="email" className={label}>{t.rsvpEmail}</label>
                                 <input type="email" id="email" name="email" required
                                     placeholder={t.rsvpEmailPlaceholder} className={field} suppressHydrationWarning />
+                            </div>
+
+                            <div>
+                                <label htmlFor="phone" className={label}>{t.rsvpPhone}</label>
+                                <input type="tel" id="phone" name="phone" required
+                                    inputMode="tel" autoComplete="tel"
+                                    placeholder={t.rsvpPhonePlaceholder} className={field} suppressHydrationWarning />
                             </div>
 
                             <div>
