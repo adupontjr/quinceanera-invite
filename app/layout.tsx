@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Outfit } from "next/font/google";
+import { Cormorant_Garamond, Outfit } from "next/font/google";
 import "./globals.css";
-import { event } from "./config/event";
+import LanguageProvider from "./components/LanguageProvider";
 
-// Placeholder typefaces — will change with the final design direction.
-const display = Playfair_Display({
+const display = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
 });
 
 const body = Outfit({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: `${event.headline} — ${event.honoreeFirstName}'s Quinceañera`,
-  description: `${event.tagline} ${event.honoreeFullName}. ${event.dateLabel}.`,
+  title: "Annika's Quinceañera · October 17, 2026",
+  description:
+    "Please join us in celebrating Annika's fifteenth birthday. Saturday, October 17, 2026 at 6:00 pm in Perris, California.",
+  openGraph: {
+    title: "Annika's Quinceañera",
+    description: "Saturday, October 17, 2026 at 6:00 pm · Perris, California",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -25,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${display.variable} ${body.variable} antialiased`}>
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

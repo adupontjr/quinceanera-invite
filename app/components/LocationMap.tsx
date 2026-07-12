@@ -1,32 +1,47 @@
+'use client';
+
 import React from 'react';
-import { event } from '../config/event';
+import { useLang } from './LanguageProvider';
+import { event, mapEmbedSrc, mapDirectionsUrl } from '../config/event';
+import Reveal from './Reveal';
 
 export default function LocationMap() {
-    return (
-        <section className="mt-8 glass p-8 rounded-3xl shadow-lg animate-fade-in text-center" style={{ animationDelay: '0.6s' }}>
-            <h3 className="text-4xl font-display text-[var(--color-primary)] mb-4">The Location</h3>
-            <div className="mb-8 space-y-1">
-                <p className="text-xl font-semibold text-[var(--color-ink)]">{event.venueName}</p>
-                <p className="text-lg text-[var(--color-ink)] opacity-80">{event.venueAddress}</p>
-            </div>
+    const { t } = useLang();
 
-            {event.mapEmbedSrc ? (
-                <div className="aspect-video rounded-2xl overflow-hidden border-4 border-white/50 shadow-inner">
+    return (
+        <section className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+            <Reveal>
+                <p className="eyebrow text-center">{t.locationTitle}</p>
+                <hr className="rule mx-auto mt-6 w-16" />
+
+                <div className="mt-10 text-center">
+                    <p className="font-display text-3xl text-[var(--ink)]">{event.venueName}</p>
+                    <p className="mt-2 text-[var(--ink-soft)]">{event.venueAddress}</p>
+                </div>
+
+                <div className="mt-10 overflow-hidden rounded-xl border border-[var(--rule)]">
                     <iframe
-                        src={event.mapEmbedSrc}
-                        style={{ border: 0 }}
-                        allowFullScreen
+                        src={mapEmbedSrc}
+                        title={`Map to ${event.venueAddress}`}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        className="w-full h-full"
-                        title={`Map to ${event.venueName}`}
+                        className="h-[320px] w-full"
+                        style={{ border: 0 }}
+                        allowFullScreen
                     />
                 </div>
-            ) : (
-                <div className="aspect-video rounded-2xl border-4 border-dashed border-white/60 flex items-center justify-center text-[var(--color-ink)] opacity-60">
-                    Map embed pending — add mapEmbedSrc in app/config/event.ts
+
+                <div className="mt-8 text-center">
+                    <a
+                        href={mapDirectionsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block border-b border-[var(--accent)] pb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--accent)] transition hover:text-[var(--accent-deep)]"
+                    >
+                        {t.directions}
+                    </a>
                 </div>
-            )}
+            </Reveal>
         </section>
     );
 }

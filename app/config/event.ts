@@ -1,52 +1,46 @@
-/**
- * Single source of truth for all event details.
- * Update these values and the whole invitation follows.
- */
+/** Single source of truth for the event. Change it here, the whole site follows. */
 
 export const event = {
-    // --- Guest of honor ---
-    honoreeFirstName: "TBD",
-    honoreeFullName: "TBD",
+    honoreeFirstName: "Annika",
 
-    // --- Headline copy ---
-    headline: "Mis Quince",
-    tagline: "Please join us in celebrating the fifteenth birthday of",
+    // Local ISO — drives the countdown and the calendar links.
+    startsAtLocal: "2026-10-17T18:00:00",
+    endsAtLocal: "2026-10-17T23:00:00",
 
-    // --- Date & time ---
-    // Local ISO datetime, used for the countdown.
-    startsAtLocal: "2026-10-10T17:00:00",
-    endsAtLocal: "2026-10-10T23:00:00",
-    // Pretty strings shown on the card.
-    dateLabel: "Saturday, October 10th, 2026",
-    timeLabel: "at 5:00 PM",
+    venueName: "Andrea Court",
+    venueAddress: "18166 Andrea Court, Perris, CA 92570",
 
-    // --- Location ---
-    venueName: "TBD Venue",
-    venueAddress: "TBD Address",
-    // Paste the "Embed a map" src from Google Maps here.
-    mapEmbedSrc: "",
+    // RSVP fallback for guests who would rather call or text.
+    rsvpContactName: "Ann Marie",
+    rsvpContactPhone: "+1 951-515-8039",
+    rsvpContactPhoneHref: "+19515158039",
 
-    // --- Gifts ---
-    giftsHeading: "Gifts",
-    giftsBlurb:
-        "Your presence is the greatest gift. If you would like to contribute, the link below has the details.",
-    giftsUrl: "",
-    giftsCtaLabel: "View Gift Registry",
-
-    // --- Calendar entry ---
-    calendarTitle: "Quinceañera",
-    calendarDescription: "A celebration of a fifteenth birthday.",
-
-    // --- Firestore ---
     rsvpCollection: "rsvps",
 } as const;
 
-/** Converts the local ISO strings above into the UTC basic format calendars expect. */
-export function toCalendarUtc(localIso: string): string {
+/** Photos — drop files into public/images and list them here. Empty = placeholder shown. */
+export const photos = {
+    hero: "/images/annika-hero.jpg",
+    gallery: [
+        "/images/annika-1.jpg",
+        "/images/annika-2.jpg",
+    ],
+} as const;
+
+function toUtc(localIso: string): string {
     return new Date(localIso).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
 
 export const calendar = {
-    start: toCalendarUtc(event.startsAtLocal),
-    end: toCalendarUtc(event.endsAtLocal),
+    start: toUtc(event.startsAtLocal),
+    end: toUtc(event.endsAtLocal),
 };
+
+export const mapEmbedSrc =
+    "https://www.google.com/maps?q=" +
+    encodeURIComponent(event.venueAddress) +
+    "&output=embed";
+
+export const mapDirectionsUrl =
+    "https://www.google.com/maps/dir/?api=1&destination=" +
+    encodeURIComponent(event.venueAddress);
