@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/*
+ * Placeholder palette — swap these five variables and the entire invitation
+ * re-themes. Final colors land once the design direction is chosen.
+ */
+:root {
+  --color-primary: #A6708B;
+  --color-primary-light: #C08FA6;
+  --color-primary-dark: #8A5A73;
+  --color-secondary: #7C8B76;
+  --color-accent: #D9B36C;
+  --color-bg: #FAF6F2;
+  --color-ink: #3B3541;
+  --color-white-glass: rgba(255, 255, 255, 0.75);
+
+  --background: var(--color-bg);
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --font-display: var(--font-display), cursive;
+  --font-sans: var(--font-body), sans-serif;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display), cursive;
+}
+
+/* Glassmorphism */
+.glass {
+  background: var(--color-white-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(59, 53, 65, 0.1);
+}
+
+.glass-hover { transition: all 0.3s ease; }
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(59, 53, 65, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-10px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.05); opacity: 0.9; }
+}
+
+.animate-fade-in  { animation: fadeIn 1s ease-out forwards; }
+.animate-slide-up { animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+.animate-float    { animation: float 6s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+
+.animate-shimmer {
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-up,
+  .animate-float,
+  .animate-shimmer,
+  .animate-pulse-soft {
+    animation: none;
+    opacity: 1;
+  }
+}
