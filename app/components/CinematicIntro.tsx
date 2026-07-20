@@ -43,7 +43,7 @@ export default function CinematicIntro({ onDone }: { onDone: () => void }) {
                 imgClassName="animate-ken-burns opacity-70 object-top"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,26,24,0.85)] via-[rgba(28,26,24,0.35)] to-[rgba(28,26,24,0.55)]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,26,24,0.85)] via-[rgba(28,26,24,0.65)] to-[rgba(28,26,24,0.6)]" />
 
             <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
                 <p className="animate-fade-up delay-300 text-[11px] uppercase tracking-[0.28em] text-white/70">
