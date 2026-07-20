@@ -4,43 +4,49 @@ import React, { useEffect, useRef, useState } from 'react';
 import { music } from '../config/event';
 
 /**
- * Browsers block audio until a real user gesture, so we can't just autoplay.
- * Instead we listen for the same first click/touch/wheel that CinematicIntro
- * already uses to let an impatient guest skip the intro — that gesture is
- * what unlocks the music too.
+ * Browsers only allow audio to autoplay if it starts muted, so it always
+ * starts that way and unmutes itself on the guest's first click/touch/wheel —
+ * the same gesture CinematicIntro already uses to let an impatient guest
+ * skip the intro — unless they've explicitly muted it before.
  */
 export default function BackgroundMusic() {
     const audioRef = useRef<HTMLAudioElement>(null);
-    const [playing, setPlaying] = useState(false);
+    const [muted, setMuted] = useState(true);
 
     useEffect(() => {
-        if (window.localStorage.getItem('musicOff') === '1') return;
+        const audio = audioRef.current;
+        if (!audio || window.localStorage.getItem('musicOff') === '1') return;
 
-        const start = () => {
-            audioRef.current?.play().then(() => setPlaying(true)).catch(() => { });
+        // The autoPlay attribute doesn't reliably fire on a React-rendered
+        // <audio> element, so start it explicitly. Muted playback is always
+        // allowed without a user gesture.
+        audio.play().catch(() => { });
+
+        const unmute = () => {
+            audio.muted = false;
+            setMuted(false);
         };
-        window.addEventListener('click', start, { once: true });
-        window.addEventListener('touchstart', start, { once: true, passive: true });
-        window.addEventListener('wheel', start, { once: true, passive: true });
+        window.addEventListener('click', unmute, { once: true });
+        window.addEventListener('touchstart', unmute, { once: true, passive: true });
+        window.addEventListener('wheel', unmute, { once: true, passive: true });
         return () => {
-            window.removeEventListener('click', start);
-            window.removeEventListener('touchstart', start);
-            window.removeEventListener('wheel', start);
+            window.removeEventListener('click', unmute);
+            window.removeEventListener('touchstart', unmute);
+            window.removeEventListener('wheel', unmute);
         };
     }, []);
 
     const toggle = () => {
         const audio = audioRef.current;
         if (!audio) return;
-        if (playing) {
-            audio.pause();
-            setPlaying(false);
+        const next = !muted;
+        audio.muted = next;
+        setMuted(next);
+        if (!next && audio.paused) audio.play().catch(() => { });
+        if (next) {
             window.localStorage.setItem('musicOff', '1');
         } else {
-            audio.play().then(() => {
-                setPlaying(true);
-                window.localStorage.removeItem('musicOff');
-            }).catch(() => { });
+            window.localStorage.removeItem('musicOff');
         }
     };
 
@@ -48,13 +54,13 @@ export default function BackgroundMusic() {
 
     return (
         <>
-            <audio ref={audioRef} src={music.background} loop preload="none" />
+            <audio ref={audioRef} src={music.background} loop muted preload="auto" />
             <button
                 onClick={toggle}
-                aria-label={playing ? 'Mute music' : 'Play music'}
+                aria-label={muted ? 'Unmute music' : 'Mute music'}
                 className="fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--rule)] bg-[var(--paper)]/90 text-[var(--ink-soft)] backdrop-blur transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
-                {playing ? (
+                {!muted ? (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-4 w-4">
                         <path d="M11 5 6 9H3v6h3l5 4V5Z" strokeLinejoin="round" />
                         <path d="M15.5 8.5a5 5 0 0 1 0 7" strokeLinecap="round" />
