@@ -15,15 +15,14 @@ export default function CinematicIntro({ onDone }: { onDone: () => void }) {
         setTimeout(onDone, 1200);
     };
 
-    // Auto-advance, or let an impatient guest skip ahead.
+    // No auto-advance: the guest has to scroll/tap/click to open the invite.
+    // That same required gesture is what unmutes the background music.
     useEffect(() => {
-        const timer = setTimeout(dismiss, 4200);
         const skip = () => dismiss();
         window.addEventListener('wheel', skip, { passive: true });
         window.addEventListener('touchstart', skip, { passive: true });
         window.addEventListener('click', skip);
         return () => {
-            clearTimeout(timer);
             window.removeEventListener('wheel', skip);
             window.removeEventListener('touchstart', skip);
             window.removeEventListener('click', skip);
