@@ -32,6 +32,9 @@ const en = {
     dinnerBody: "Dinner will be served shortly after we begin.",
     dressTitle: "Ranchero or cowboy style",
     dressBody: "Jeans and boots are welcome.",
+    hotelTitle: "Where to stay",
+    hotelBody: "A Hilton room block is available for guests traveling in.",
+    hotelLink: "Reserve your room",
 
     locationTitle: "The location",
     directions: "Get directions",
@@ -104,6 +107,9 @@ const es: Copy = {
     dinnerBody: "La cena se servirá poco después de comenzar.",
     dressTitle: "Estilo ranchero o vaquero",
     dressBody: "Se permiten vaqueros y botas.",
+    hotelTitle: "Dónde hospedarse",
+    hotelBody: "Hay habitaciones reservadas en el Hilton para invitados de fuera.",
+    hotelLink: "Reservar su habitación",
 
     locationTitle: "El lugar",
     directions: "Cómo llegar",

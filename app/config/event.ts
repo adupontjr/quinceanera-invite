@@ -16,6 +16,9 @@ export const event = {
     rsvpContactPhoneHref: "+19515158039",
 
     rsvpCollection: "rsvps",
+
+    // Hilton room block for guests traveling in.
+    hotelBookingUrl: "https://www.hilton.com/en/attend-my-event/ontiehx-90g-89df3b05-6c46-423c-9232-50f80a7dcf2b/",
 } as const;
 
 /** Photos — drop files into public/images and list them here. Empty = placeholder shown. */

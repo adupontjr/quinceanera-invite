@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useLang } from './LanguageProvider';
-import { photos } from '../config/event';
+import { event, photos } from '../config/event';
 import Photo from './Photo';
 import Reveal from './Reveal';
 
@@ -31,6 +31,20 @@ export default function EventDetails() {
                                 <dd className="mt-2 leading-relaxed text-[var(--ink-soft)]">{item.body}</dd>
                             </div>
                         ))}
+                        <div>
+                            <dt className="font-display text-2xl text-[var(--ink)]">{t.hotelTitle}</dt>
+                            <dd className="mt-2 leading-relaxed text-[var(--ink-soft)]">
+                                {t.hotelBody}{' '}
+                                <a
+                                    href={event.hotelBookingUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="border-b border-[var(--accent)] pb-0.5 text-[var(--accent)] transition hover:text-[var(--accent-deep)]"
+                                >
+                                    {t.hotelLink}
+                                </a>
+                            </dd>
+                        </div>
                     </dl>
                 </Reveal>
 
