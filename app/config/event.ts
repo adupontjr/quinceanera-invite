@@ -42,6 +42,11 @@ export const ornaments = {
     cornerRight: "/images/floral-corner-right.png",
 } as const;
 
+/** Background music. Empty = the toggle button simply doesn't render. */
+export const music = {
+    background: "/music/background-music.mp3",
+} as const;
+
 function toUtc(localIso: string): string {
     return new Date(localIso).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }

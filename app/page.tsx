@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import CinematicIntro from './components/CinematicIntro';
+import BackgroundMusic from './components/BackgroundMusic';
 import Hero from './components/Hero';
 import Countdown from './components/Countdown';
 import EventDetails from './components/EventDetails';
@@ -18,6 +19,7 @@ export default function Home() {
             {!introDone && <CinematicIntro onDone={() => setIntroDone(true)} />}
 
             <LanguageToggle />
+            <BackgroundMusic />
 
             <main>
                 <Hero />
