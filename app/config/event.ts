@@ -25,8 +25,7 @@ export const photos = {
     // Opening reveal: the full-length shot, full-bleed behind the Ken Burns push.
     intro: "/images/annika-intro.jpg",
     gallery: [
-        "/images/annika-1.jpg",
-        "/images/annika-2.jpg",
+        "/images/annika-3.jpg",
     ],
 } as const;
 
