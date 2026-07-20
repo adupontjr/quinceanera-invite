@@ -40,7 +40,7 @@ export default function CinematicIntro({ onDone }: { onDone: () => void }) {
                 alt=""
                 label=""
                 className="absolute inset-0 h-full w-full"
-                imgClassName="animate-ken-burns opacity-70"
+                imgClassName="animate-ken-burns opacity-70 object-top"
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,26,24,0.85)] via-[rgba(28,26,24,0.35)] to-[rgba(28,26,24,0.55)]" />
