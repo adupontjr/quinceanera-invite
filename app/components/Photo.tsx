@@ -12,19 +12,21 @@ export default function Photo({
     className = '',
     imgClassName = '',
     label = 'Photo',
+    bgClassName = 'bg-[var(--paper-warm)]',
 }: {
     src: string;
     alt: string;
     className?: string;
     imgClassName?: string;
     label?: string;
+    bgClassName?: string;
 }) {
     const [failed, setFailed] = useState(false);
 
     if (!src || failed) {
         return (
             <div
-                className={`flex items-center justify-center bg-[var(--paper-warm)] ${className}`}
+                className={`flex items-center justify-center ${bgClassName} ${className}`}
                 aria-hidden="true"
             >
                 <span className="eyebrow">{label}</span>
@@ -33,7 +35,7 @@ export default function Photo({
     }
 
     return (
-        <div className={`overflow-hidden bg-[var(--paper-warm)] ${className}`}>
+        <div className={`overflow-hidden ${bgClassName} ${className}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
                 src={src}
