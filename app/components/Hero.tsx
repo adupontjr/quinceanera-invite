@@ -46,11 +46,7 @@ export default function Hero() {
                     />
                 </div>
 
-                <p className="animate-fade-up delay-500 mx-auto mt-14 max-w-xl text-lg leading-relaxed text-[var(--ink-soft)]">
-                    {t.heroInvite}
-                </p>
-
-                <div className="animate-fade-up delay-700 mt-10 flex items-stretch justify-center gap-8">
+                <div className="animate-fade-up delay-700 mt-14 flex items-stretch justify-center gap-8">
                     <div className="flex-1 text-right">
                         <p className="font-display text-2xl text-[var(--ink)] md:text-3xl">{t.dateWeekday}</p>
                         <p className="eyebrow mt-2">{t.dateDay}</p>

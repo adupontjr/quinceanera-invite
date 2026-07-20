@@ -11,7 +11,6 @@ const en = {
     introHint: "Scroll to open",
 
     heroKicker: "Mis quince años",
-    heroInvite: "Please join us in celebrating the fifteenth birthday of",
 
     dateWeekday: "Saturday",
     dateDay: "October 17, 2026",
@@ -81,12 +80,11 @@ const es: Copy = {
     switchTo: "English",
 
     introKicker: "Acompáñanos a celebrar",
-    introName: "Los quince de",
+    introName: "Los quince años de",
     introEvent: "Annika",
     introHint: "Desliza para abrir",
 
     heroKicker: "Mis quince años",
-    heroInvite: "Acompáñanos a celebrar los quince años de",
 
     dateWeekday: "Sábado",
     dateDay: "17 de octubre, 2026",
