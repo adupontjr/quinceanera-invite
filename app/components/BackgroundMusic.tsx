@@ -5,9 +5,10 @@ import { music } from '../config/event';
 
 /**
  * Browsers only allow audio to autoplay if it starts muted, so it always
- * starts that way and unmutes itself on the guest's first click/touch/wheel —
- * the same gesture CinematicIntro already uses to let an impatient guest
- * skip the intro — unless they've explicitly muted it before.
+ * starts that way and unmutes on the guest's first click or touch — unless
+ * they've explicitly muted it before. Deliberately not "wheel": a scroll
+ * gesture doesn't count as real user activation in most browsers, so an
+ * unmute triggered by scrolling can get silently reverted.
  */
 export default function BackgroundMusic() {
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -24,15 +25,16 @@ export default function BackgroundMusic() {
 
         const unmute = () => {
             audio.muted = false;
+            // Re-assert playback from directly inside this gesture handler —
+            // the most reliable way to get audio unlocked across browsers.
+            audio.play().catch(() => { });
             setMuted(false);
         };
         window.addEventListener('click', unmute, { once: true });
         window.addEventListener('touchstart', unmute, { once: true, passive: true });
-        window.addEventListener('wheel', unmute, { once: true, passive: true });
         return () => {
             window.removeEventListener('click', unmute);
             window.removeEventListener('touchstart', unmute);
-            window.removeEventListener('wheel', unmute);
         };
     }, []);
 
@@ -42,7 +44,7 @@ export default function BackgroundMusic() {
         const next = !muted;
         audio.muted = next;
         setMuted(next);
-        if (!next && audio.paused) audio.play().catch(() => { });
+        if (!next) audio.play().catch(() => { });
         if (next) {
             window.localStorage.setItem('musicOff', '1');
         } else {
