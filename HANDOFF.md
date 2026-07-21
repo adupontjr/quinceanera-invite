@@ -10,7 +10,7 @@ Firebase backend.
 
 | | |
 |---|---|
-| **Live site** | https://quinceanera-invite.vercel.app |
+| **Live site** | https://annikasquince.vercel.app |
 | **Repo** | https://github.com/adupontjr/quinceanera-invite (private) |
 | **Local** | `C:\Users\jr\My Apps\quinceanera-invite` |
 | **Hosting** | Vercel, auto-deploys on push to `main` |

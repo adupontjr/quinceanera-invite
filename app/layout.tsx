@@ -23,6 +23,7 @@ const body = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://annikasquince.vercel.app"),
   title: "Annika's Quinceañera · October 17, 2026",
   description:
     "Please join us in celebrating Annika's fifteenth birthday. Saturday, October 17, 2026 at 6:00 pm in Perris, California.",
@@ -30,6 +31,11 @@ export const metadata: Metadata = {
     title: "Annika's Quinceañera",
     description: "Saturday, October 17, 2026 at 6:00 pm · Perris, California",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Annika's Quinceañera",
+    description: "Saturday, October 17, 2026 at 6:00 pm · Perris, California",
   },
 };
 
